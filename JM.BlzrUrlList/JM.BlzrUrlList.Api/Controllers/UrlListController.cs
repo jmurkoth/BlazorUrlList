@@ -25,18 +25,37 @@ namespace JM.BlzrUrlList.Api.Controllers
 
         // GET api/<UrlListController>/5
         [HttpGet("{urlId}")]
-        public UrlList Get(string urlId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<UrlList>> Get(string urlId)
         {
-            return _urlReposity.Get(urlId);
+            try
+            {
+                var matchingItem = await _urlReposity.Get(urlId);
+                return Ok(matchingItem);
+            }
+            catch (UrlListNotFoundException ex)
+            {
+
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Getting Data");
+            }
         }
 
         // POST api/<UrlListController>
         [HttpPost]
-        public void Post([FromBody] UrlList urlList)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Post([FromBody] UrlList urlList)
         {
 
             // Save the urlbundle
-            _urlReposity.Save(urlList);
+            var savedList= await _urlReposity.Save(urlList);
+            return Created($"/{savedList.UrlId}", savedList);
         }
 
         // DELETE api/<UrlListController>/5
@@ -44,12 +63,12 @@ namespace JM.BlzrUrlList.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Delete(string urlId)
+        public async Task<ActionResult> Delete(string urlId)
         {
             try
             {
-                _urlReposity.Delete(urlId);
-                return Ok();
+                var deletedItm= await _urlReposity.Delete(urlId);
+                return Ok(deletedItm);
             }
             catch (UrlListNotFoundException ex)
             {

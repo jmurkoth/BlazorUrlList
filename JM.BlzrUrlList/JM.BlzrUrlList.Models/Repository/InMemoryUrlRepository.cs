@@ -14,23 +14,25 @@ namespace JM.BlzrUrlList.Models.Repository
         {
            
         }
-        public void Delete(string urlId)
+        public Task<UrlList> Delete(string urlId)
         {
-            if(!_inMemoryList.ContainsKey(urlId))
+            UrlList match;
+            if (!_inMemoryList.TryGetValue(urlId, out match))
             {
                 throw new UrlListNotFoundException(urlId);
             }
             _inMemoryList.Remove(urlId);
+            return Task.FromResult(match);
         }
 
-        public UrlList Get(string urlId)
+        public Task<UrlList> Get(string urlId)
         {
             UrlList match;
            if(!_inMemoryList.TryGetValue(urlId, out match))
             {
                 throw new UrlListNotFoundException(urlId);
             }
-            return match;
+            return Task.FromResult(match);
         }
 
         public IList<UrlList> GetListForUser(string userId)
@@ -38,9 +40,10 @@ namespace JM.BlzrUrlList.Models.Repository
             throw new NotImplementedException();
         }
 
-        public void Save(UrlList urlList)
+        public Task<UrlList> Save(UrlList urlList)
         {
             _inMemoryList.Add(urlList.UrlId, urlList);
+            return Task.FromResult(urlList);
         }
     }
 }

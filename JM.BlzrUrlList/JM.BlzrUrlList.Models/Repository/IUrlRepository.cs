@@ -8,9 +8,9 @@ namespace JM.BlzrUrlList.Models.Repository
 {
     public interface IUrlRepository
     {
-        UrlList Get(string urlId);
-        void Save(UrlList urlList);
-        void Delete(string urlId);
+        Task<UrlList> Get(string urlId);
+        Task<UrlList> Save(UrlList urlList);
+        Task<UrlList> Delete(string urlId);
         IList<UrlList> GetListForUser(string userId);
     }
 }
