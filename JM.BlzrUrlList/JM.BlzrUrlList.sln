@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrlList.Models", "JM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrlList.Api", "JM.BlzrUrlList.Api\JM.BlzrUrlList.Api.csproj", "{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrList.Core", "JM.BlzrUrList.Core\JM.BlzrUrList.Core.csproj", "{F4E68242-E162-49EF-9F7B-397DD1DA8001}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E68242-E162-49EF-9F7B-397DD1DA8001}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E68242-E162-49EF-9F7B-397DD1DA8001}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E68242-E162-49EF-9F7B-397DD1DA8001}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E68242-E162-49EF-9F7B-397DD1DA8001}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

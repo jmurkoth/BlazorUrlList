@@ -7,8 +7,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+#if ApiConventions
+[assembly: ApiConventionType(typeof(DefaultApiConventions))]
+#endif
 namespace JM.BlzrUrlList.Api
 {
+    
     public class Program
     {
         public static void Main(string[] args)
