@@ -25,6 +25,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces(typeof(UrlList))]
         public async Task<ActionResult<UrlList>> Get(string urlId)
         {
             try
@@ -47,6 +48,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces(typeof(UrlList))]
         public async Task<ActionResult> Post([FromBody] UrlList urlList)
         {
 
@@ -60,6 +62,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces(typeof(UrlList))]
         public async Task<ActionResult> Delete(string urlId)
         {
             try

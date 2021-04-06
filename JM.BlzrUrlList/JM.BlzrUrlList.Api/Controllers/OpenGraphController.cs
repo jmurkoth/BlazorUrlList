@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OpenGraphNet;
 using JM.BlzrUrlList.Core.Repository;
 using System.Net.Mime;
+using JM.BlzrUrlList.Models;
 
 namespace JM.BlzrUrlList.Api.Controllers
 {
@@ -24,6 +25,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         }
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Produces(typeof(OpenGraphResult))]
         public async Task<ActionResult> UriMetadata(string urlId)
         {
                 var result = await _openGraphRepository.GetInfo(urlId);
