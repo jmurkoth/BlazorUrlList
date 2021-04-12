@@ -43,6 +43,28 @@ namespace JM.BlzrUrlList.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error Getting Data");
             }
         }
+        [HttpGet("users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Produces(typeof(UrlList))]
+        public async Task<ActionResult<UrlList>> GetForUser(string userId)
+        {
+            try
+            {
+                var matchingItems = await _urlReposity.GetListForUser(userId);
+                return Ok(matchingItems);
+            }
+            catch (UrlListNotFoundException ex)
+            {
+
+                return NotFound(ex.Message);
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error Getting Data");
+            }
+        }
 
         // POST api/<UrlListController>
         [HttpPost]

@@ -1,10 +1,14 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using System;
 using System.Collections.Generic;
 
 namespace JM.BlzrUrlList.Models
 {
     public record  UrlList
     {
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string Id { get; set; }
         public string UserId { get; set; }
         public string UrlId { get; set; }
         public string Description { get; set; }

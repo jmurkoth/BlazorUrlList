@@ -34,7 +34,7 @@ namespace JM.BlzrUrlList.Core.Repository
             return Task.FromResult(match);
         }
 
-        public IList<UrlList> GetListForUser(string userId)
+        public Task<IList<UrlList>> GetListForUser(string userId)
         {
             throw new NotImplementedException();
         }

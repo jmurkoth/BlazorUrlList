@@ -9,6 +9,6 @@ namespace JM.BlzrUrlList.Core.Repository
         Task<UrlList> Get(string urlId);
         Task<UrlList> Save(UrlList urlList);
         Task<UrlList> Delete(string urlId);
-        IList<UrlList> GetListForUser(string userId);
+        Task<IList<UrlList>> GetListForUser(string userId);
     }
 }

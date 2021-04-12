@@ -1,3 +1,4 @@
+using JM.BlzrUrList.Core.DB;
 using JM.BlzrUrList.Core.Repository;
 using JM.BlzrUrlList.Core.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 
@@ -26,8 +28,10 @@ namespace JM.BlzrUrlList.Api
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
-            services.AddSingleton<IUrlRepository, InMemoryUrlRepository>();
+            services.AddSingleton<IUrlRepository, MongoUrlRepository>();
             services.AddScoped<IOpenGraphRepository, OpenGraphRespository>();
+            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
+            services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
