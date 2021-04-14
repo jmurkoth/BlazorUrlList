@@ -1,4 +1,5 @@
-﻿using JM.BlzrUrlList.Core.Repository;
+﻿using JM.BlzrUrList.Core.Helper;
+using JM.BlzrUrlList.Core.Repository;
 using JM.BlzrUrlList.Exceptions;
 using JM.BlzrUrlList.Models;
 using Microsoft.AspNetCore.Http;
@@ -30,7 +31,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         {
             try
             {
-                var matchingItem = await _urlReposity.Get(urlId);
+                var matchingItem = await _urlReposity.Get(urlId.ToLower());
                 return Ok(matchingItem);
             }
             catch (UrlListNotFoundException ex)
@@ -70,13 +71,19 @@ namespace JM.BlzrUrlList.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Produces(typeof(UrlList))]
         public async Task<ActionResult> Post([FromBody] UrlList urlList)
         {
 
             // Save the urlbundle
-            var savedList= await _urlReposity.Save(urlList);
-            return Created($"/{savedList.UrlId}", savedList);
+            if (urlList != null && urlList.Validate())
+            {
+                urlList.SetUrlId();
+                var savedList = await _urlReposity.Save(urlList);
+                return Created($"/{savedList.UrlId}", savedList);
+            }
+            return BadRequest();
         }
 
         // DELETE api/<UrlListController>/5
