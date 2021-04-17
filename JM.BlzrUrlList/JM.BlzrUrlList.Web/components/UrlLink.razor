@@ -1,0 +1,41 @@
+﻿@using System.Text.RegularExpressions
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Enter a link and press enter</span>
+    </div>
+    <input type="text" class="form-control   @(isValid ? "" : "is-invalid")" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" placeholder="http://example.com" @onkeydown="@Enter" @bind="newUrl" @bind:event="oninput" />
+</div>
+
+<div class="alert alert-danger" role="alert" hidden="@isValid">
+    That doesn't look like a valid URL
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnValidLink { get; set; }
+    private string newUrl;
+    private bool isValid = true;
+    private string urlRegEx = @"[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)";
+
+    public async Task Enter(KeyboardEventArgs e)
+    {
+        // when the user clicks enter
+        if (e.Code == "Enter" || e.Code == "NumpadEnter" )
+        {
+            if(Regex.Match(newUrl, urlRegEx).Success)
+            {
+                //Check if it is a valid url and emit a new event that a url is available
+                isValid = true;
+                await OnValidLink.InvokeAsync(newUrl);
+                newUrl = string.Empty;
+                StateHasChanged();
+            }
+            else
+            {
+                isValid = false;
+            }
+
+        }
+
+    }
+}

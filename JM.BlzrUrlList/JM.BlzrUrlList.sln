@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.31025.218
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JM.BlzrUrlList.Web", "JM.BlzrUrlList.Web\JM.BlzrUrlList.Web.csproj", "{87F5218B-3A1E-4D5C-B8D6-98919882D55B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrlList.Models", "JM.BlzrUrlList.Models\JM.BlzrUrlList.Models.csproj", "{595FFB5C-7DB2-4DA7-AB43-0AD41FD1E0A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JM.BlzrUrlList.Models", "JM.BlzrUrlList.Models\JM.BlzrUrlList.Models.csproj", "{595FFB5C-7DB2-4DA7-AB43-0AD41FD1E0A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrlList.Api", "JM.BlzrUrlList.Api\JM.BlzrUrlList.Api.csproj", "{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JM.BlzrUrlList.Api", "JM.BlzrUrlList.Api\JM.BlzrUrlList.Api.csproj", "{6EA9A00D-CD95-4491-A1BB-C114BE6D225A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JM.BlzrUrList.Core", "JM.BlzrUrList.Core\JM.BlzrUrList.Core.csproj", "{F4E68242-E162-49EF-9F7B-397DD1DA8001}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JM.BlzrUrList.Core", "JM.BlzrUrList.Core\JM.BlzrUrList.Core.csproj", "{F4E68242-E162-49EF-9F7B-397DD1DA8001}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

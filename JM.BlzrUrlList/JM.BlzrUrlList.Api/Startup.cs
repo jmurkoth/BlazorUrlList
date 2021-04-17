@@ -28,7 +28,7 @@ namespace JM.BlzrUrlList.Api
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
-            services.AddSingleton<IUrlRepository, MongoUrlRepository>();
+            services.AddSingleton<IUrlRepository, InMemoryUrlRepository>();
             services.AddScoped<IOpenGraphRepository, OpenGraphRespository>();
             services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
             services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);

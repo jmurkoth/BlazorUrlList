@@ -1,0 +1,50 @@
+﻿<h2>@Urls?.Count()</h2>
+<ul ondragover="event.preventDefault();" >
+    @if (Urls != null)
+    {
+        @foreach (var item in Urls)
+        {
+           
+                <UrlDisplay DisplayItem="item" OnUrlDragStart="StartDrag" OnUrlDrop="Drop" OnUrlDelete="Delete"></UrlDisplay>
+        }
+    }
+</ul>
+@code {
+
+    [Parameter]
+    public IList<CustomUrl> Urls { get; set; }
+    private int draggedIndex;
+
+    void StartDrag(CustomUrl item)
+    {
+        draggedIndex = GetIndex(item);
+        Console.WriteLine($"DragStart for {item.Url} index {draggedIndex}");
+    }
+    int GetIndex(CustomUrl item)
+    {
+        return Urls.IndexOf(item);
+    }
+
+    void Delete (CustomUrl item)
+    {
+        var index = GetIndex(item);
+        Console.WriteLine($" Delete for {item.Url} index {index}");
+        Urls.RemoveAt(index);
+        StateHasChanged();
+    }
+    void Drop(CustomUrl item)
+    {
+        if(item!=null)
+        {
+            var index = GetIndex(item);
+            Console.WriteLine($" Drop on {item.Url} index {index}");
+            var draggedItem = Urls[draggedIndex];
+            // Remove the item from the index
+            Urls.RemoveAt(draggedIndex);
+            Urls.Insert(index, draggedItem);
+            draggedIndex = index;
+            StateHasChanged();
+        }
+
+    }
+}

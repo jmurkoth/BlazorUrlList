@@ -15,4 +15,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JM.BlzrUrlList.Models\JM.BlzrUrlList.Models.csproj" />
+  </ItemGroup>
+
 </Project>

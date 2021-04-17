@@ -1,15 +1,27 @@
 ﻿@page "/"
-
+@inject NavigationManager NavManager
+@inject AppState appState 
 <div class=" container-sm container-fluid">
- 
+    <div class="section">
 
 
- <div class="input-group input-group-lg">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="inputGroup-sizing-lg">Large</span>
-  </div>
-  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-   <button type="button" class="btn btn-lg btn-dark" >Save</button>
+
+    </div>
+
+
+    <div class="section">
+        <UrlLink OnValidLink="Linkadded"></UrlLink>
+    </div>
+
 </div>
-</div>
 
+@code
+{
+    public void Linkadded(string newLink)
+    {
+        Console.WriteLine($"Link added-{newLink}");
+        // Add a state service
+        appState.AddUrl(new Models.CustomUrl { Url = newLink, Description = "test", Title = "test" });
+        NavManager.NavigateTo("/edit");
+    }
+}
