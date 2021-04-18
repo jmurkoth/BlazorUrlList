@@ -2,7 +2,7 @@
     @ondragstart="@(() => HandleDragStart(DisplayItem))"  @ondrop="@(() => HandleDrop(DisplayItem))">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-1"><span class="oi oi-grid-four-up align-middle"></span></div>
+            <div class="col-1"><span class="oi oi-grid-four-up align-middle drag-cursor"></span></div>
             <div class="col-10">
                 <div class="row align-items-center">
                     <div class="col-1"><img src="/images/no-image.png" width="64" height="64" /></div>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-1 align-middle"><span class="oi oi-delete" @onclick="@(()=>HandleDelete(DisplayItem))"></span></div>
+            <div class="col-1 align-middle"><span class="oi oi-trash" @onclick="@(()=>HandleDelete(DisplayItem))"></span></div>
         </div>
     </div>
 </li>

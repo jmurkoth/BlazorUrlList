@@ -30,8 +30,8 @@ a, .btn-link {
     color: red;
 }
 
-lnk{
-    padding:3px;
+.drag-cursor{
+    cursor: grabbing;
 }
 #blazor-error-ui {
     background: lightyellow;
