@@ -5,13 +5,13 @@
             <div class="col-1"><span class="oi oi-grid-four-up align-middle drag-cursor"></span></div>
             <div class="col-10">
                 <div class="row align-items-center">
-                    <div class="col-1"><img src="/images/no-image.png" width="64" height="64" /></div>
+                    <div class="col-1"><img src="@(String.IsNullOrEmpty(DisplayItem.Image)? "/images/no-image.png": DisplayItem.Image)"  width="64" height="64" class="img-fluid img-thumbnail" alt="@DisplayItem.Title" /></div>
                     <div class="col-11">
                         <div class="row">
-                            <input type="text" placeholder="Enter a title" class="form-control-sm" />
+                            <input type="text" placeholder="Enter a title" class="form-control-sm" @bind="DisplayItem.Title" />
                         </div>
                         <div class="row">
-                            <textarea placeholder="Enter a description" class=""></textarea>
+                            <textarea placeholder="Enter a description" class=""  @bind="DisplayItem.Description"></textarea>
                         </div>
                         <div class="row">
                             @DisplayItem.Url

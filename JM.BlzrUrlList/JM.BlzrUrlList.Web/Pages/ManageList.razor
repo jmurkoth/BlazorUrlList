@@ -1,5 +1,6 @@
 ﻿@page  "/edit"
 @inject AppState appState
+@inject UrlService urlService
 
 <div class="container" style="padding-top:100px">
     <div class="row">
@@ -35,10 +36,15 @@
 
 
 @code {
-    public void Linkadded(string newLink)
+    public async Task Linkadded(string newLink)
     {
         Console.WriteLine($"Link added-{newLink}");
         // Add a state service
-        appState.AddUrl(new Models.CustomUrl { Url = newLink, Description = "test", Title = "test" });
+        var metaData = await urlService.GetUrlMetaData(newLink);
+        appState.AddUrl(new Models.CustomUrl { Url = newLink,  
+                            Description = metaData?.Description,  
+                            Title = metaData?.Title, 
+                            Image = metaData?.Image });
+     
     }
 }
