@@ -26,9 +26,9 @@ namespace JM.BlzrUrlList.Api.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Produces(typeof(OpenGraphResult))]
-        public async Task<ActionResult> UriMetadata(string urlId)
+        public async Task<ActionResult> UriMetadata(OpenGraphRequest urlRequest)
         {
-                var result = await _openGraphRepository.GetInfo(urlId);
+                var result = await _openGraphRepository.GetInfo(urlRequest.UrlId);
                 return Ok(result);
         }
 

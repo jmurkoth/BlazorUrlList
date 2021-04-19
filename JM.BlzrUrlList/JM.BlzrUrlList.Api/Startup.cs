@@ -16,6 +16,7 @@ namespace JM.BlzrUrlList.Api
 
     public class Startup
     {
+        readonly string allowedOrigins = "allowedOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,6 +34,16 @@ namespace JM.BlzrUrlList.Api
             services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
             services.AddSingleton<IDatabaseSettings>(x => x.GetRequiredService<IOptions<DatabaseSettings>>().Value);
             services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: allowedOrigins,
+                                  builder =>
+                                  {
+                                      builder.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "JM.BlzrUrlList.Api", Version = "v1" });
@@ -50,7 +61,7 @@ namespace JM.BlzrUrlList.Api
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors(allowedOrigins);
             app.UseRouting();
 
             app.UseAuthentication();
