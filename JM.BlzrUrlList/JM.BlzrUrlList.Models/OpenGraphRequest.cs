@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace JM.BlzrUrlList.Models
 {
-    public class OpenGraphRequest
-    {
-        public string UrlId { get; set; }
-    }
+    public record OpenGraphRequest (string UrlId);
+   
 }
