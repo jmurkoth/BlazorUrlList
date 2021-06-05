@@ -1,0 +1,25 @@
+﻿@page "/{UrlId}"
+@inject AppState appState
+@inject UrlService urlService
+<h2>@_currentList?.Description</h2>
+ @if (_currentList != null)
+    {
+        @foreach (var item in _currentList.Urls)
+        {
+           
+             <UrlReadOnlyDisplay DisplayItem="item"/>
+        }
+    }
+
+@code {
+    [Parameter]
+    public string UrlId { get; set; }
+    private UrlList _currentList;
+
+    protected async override void OnParametersSet()
+    {
+       _currentList= await urlService.GetUrlList(UrlId);
+        StateHasChanged();
+        
+    }
+}

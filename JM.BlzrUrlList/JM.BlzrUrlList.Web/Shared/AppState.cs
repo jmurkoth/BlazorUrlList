@@ -10,6 +10,12 @@ namespace JM.BlzrUrlList.Web.Shared
     {
         private readonly UrlList _urlList = new UrlList();
         public UrlList CurrentList { get { return _urlList; } }
+
+        public void SetTitleAndDescription(string title, string description)
+        {
+            _urlList.Description = description;
+            _urlList.UrlId = title;
+        }
         public void AddUrl(CustomUrl url)
         {
             if(_urlList.Urls==null)
@@ -17,6 +23,13 @@ namespace JM.BlzrUrlList.Web.Shared
                 _urlList.Urls = new List<CustomUrl>();
             }    
             _urlList.Urls.Add(url);
+        }
+
+        public bool Validate()
+        {
+            bool isValid = false;
+            isValid = _urlList.Urls?.Count >0 ;
+            return isValid;
         }
     }
 }

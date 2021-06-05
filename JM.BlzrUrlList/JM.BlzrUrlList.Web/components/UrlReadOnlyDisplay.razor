@@ -1,0 +1,43 @@
+﻿
+@inject IJSRuntime JSRuntime;
+
+<li  @key="DisplayItem.Url" style="list-style-type:none; padding:10px;cursor:pointer">
+<div class="card bg-light mb-3 border-dark" @onclick="@(()=>OpenLink(DisplayItem.Url))">
+  <div class="card-body">
+        <div class="row align-items-center">
+           <div class="col-1"><img src="@(String.IsNullOrEmpty(DisplayItem.Image)? "/images/no-image.png": DisplayItem.Image)"  width="90" height="90" class="img-fluid img-thumbnail" alt="@DisplayItem.Title" /></div> 
+           <div class="col-11">
+                        <div class="row">
+                            <h5 class="card-title">@DisplayItem.Title</h5>
+                        </div>
+                        <div class="row">
+                             <p class="card-text">@DisplayItem.Description</p>
+                        </div>
+                         <div class="row">
+                            <p class="text-muted">@DisplayItem.Url</p>
+                        </div>
+            </div>
+       </div>
+
+  </div>
+  </div>
+</li>
+
+@code {
+
+    [Parameter]
+    public CustomUrl DisplayItem { get; set; }
+
+    public async Task OpenLink(string link)
+    {
+        if(!link.StartsWith("https"))
+        {
+            link=string.Format($"https://{link}");
+        }
+        Console.WriteLine(link);
+        await JSRuntime.InvokeAsync<object>("open", link, "_blank");
+
+
+    }
+   
+}

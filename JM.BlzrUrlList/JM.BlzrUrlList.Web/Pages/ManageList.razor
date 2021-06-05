@@ -1,24 +1,25 @@
 ﻿@page  "/edit"
 @inject AppState appState
 @inject UrlService urlService
+@inject NavigationManager NavManager
 
 <div class="container" style="padding-top:100px">
     <div class="row">
         <div class="col-sm">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="lnkTitle" placeholder="">
+                <input type="text" class="form-control" id="lnkTitle" placeholder="" @bind="listTitle" @onblur="CheckIfExists">
                 <label for="lnkTitle">Link Title</label>
             </div>
         </div>
         <div class="col-sm">
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="lnkDescription" placeholder="">
+                <input type="text" class="form-control" id="lnkDescription" placeholder="" @bind="listDescription">
                 <label for="lnkDescription">Description</label>
             </div>
         </div>
         <div class="col-sm">
             <div class="d-grid gap-2 mx-auto">
-                <button class="btn btn-lg btn-primary">Publish</button>
+                <button class="btn btn-lg btn-primary"  disabled="@(!appState.Validate())" @onclick="Save">Publish</button>
             </div>
         </div>
     </div>
@@ -29,22 +30,56 @@
     </div>
     <div class="row">
         <div class="col">
-            <UrlEditor Urls="appState.CurrentList.Urls" />
+            <UrlEditor Urls="appState.CurrentList.Urls" OnUrlDelete="UrlDeleted" />
         </div>
     </div>
 </div>
 
 
 @code {
+    private string listTitle;
+    private string listDescription;
     public async Task Linkadded(string newLink)
     {
         Console.WriteLine($"Link added-{newLink}");
         // Add a state service
         var metaData = await urlService.GetUrlMetaData(newLink);
-        appState.AddUrl(new Models.CustomUrl { Url = newLink,  
-                            Description = metaData?.Description,  
-                            Title = metaData?.Title, 
-                            Image = metaData?.Image });
-     
+        appState.AddUrl(new Models.CustomUrl
+        {
+            Url = newLink,
+            Description = metaData?.Description,
+            Title = metaData?.Title,
+            Image = metaData?.Image
+        });
+        StateHasChanged();
     }
+    public void UrlDeleted()
+    {
+        StateHasChanged();
+    }
+    public async Task CheckIfExists()
+    {
+
+        if (string.IsNullOrEmpty(listTitle)) return;
+        Console.WriteLine($"Checking if listtitle entered exists- {listTitle}");
+        var match = await urlService.GetUrlList(listTitle);
+        if (match != null)
+        {
+            Console.WriteLine($"URL match exists");
+        }
+    }
+
+    public async Task Save()
+    {
+        appState.SetTitleAndDescription(listTitle, listDescription);
+        var match = await urlService.SaveUrlList(appState.CurrentList);
+        if (match != null)
+        {
+            Console.WriteLine($"Url List saved");
+            NavManager.NavigateTo($"/{match.UrlId}");
+        }
+
+
+    }
+
 }
