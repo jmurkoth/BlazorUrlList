@@ -2,13 +2,19 @@
 @inject AppState appState
 @inject UrlService urlService
 @inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="container" style="padding-top:100px">
     <div class="row">
         <div class="col-sm">
+            
+           
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="lnkTitle" placeholder="" @bind="listTitle" @onblur="CheckIfExists">
+                <input type="text" class="form-control  @(isValid ? "" : "is-invalid")" id="lnkTitle" placeholder=""  @bind="listTitle" @onblur="CheckIfExists">
                 <label for="lnkTitle">Link Title</label>
+            </div>
+             <div class="alert alert-danger" role="alert" hidden="@isValid">
+               This Link exists . Please choose another one !
             </div>
         </div>
         <div class="col-sm">
@@ -19,7 +25,7 @@
         </div>
         <div class="col-sm">
             <div class="d-grid gap-2 mx-auto">
-                <button class="btn btn-lg btn-primary"  disabled="@(!appState.Validate())" @onclick="Save">Publish</button>
+                <button class="btn btn-lg btn-primary"  disabled="@(!appState.Validate() || !isValid)" @onclick="Save">Publish</button>
             </div>
         </div>
     </div>
@@ -37,8 +43,20 @@
 
 
 @code {
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
     private string listTitle;
     private string listDescription;
+    private bool isValid= true;
+
+
+
+        protected async override Task OnParametersSetAsync()
+        {
+           appState.Reset();
+        }
+
+    
     public async Task Linkadded(string newLink)
     {
         Console.WriteLine($"Link added-{newLink}");
@@ -60,21 +78,34 @@
     public async Task CheckIfExists()
     {
 
+        isValid=true;
         if (string.IsNullOrEmpty(listTitle)) return;
         Console.WriteLine($"Checking if listtitle entered exists- {listTitle}");
         var match = await urlService.GetUrlList(listTitle);
         if (match != null)
         {
             Console.WriteLine($"URL match exists");
+            isValid=false;
         }
     }
 
     public async Task Save()
     {
-        appState.SetTitleAndDescription(listTitle, listDescription);
+       
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        var userId=string.Empty;
+        if (user.Identity.IsAuthenticated)
+        {
+           userId=user.GetUserNameClaim();
+           Console.WriteLine(userId);
+           
+        }
+         appState.SetMiscInfo(userId,listTitle, listDescription);
         var match = await urlService.SaveUrlList(appState.CurrentList);
         if (match != null)
         {
+            appState.Reset();
             Console.WriteLine($"Url List saved");
             NavManager.NavigateTo($"/{match.UrlId}");
         }

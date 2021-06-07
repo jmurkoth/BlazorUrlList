@@ -8,13 +8,19 @@ namespace JM.BlzrUrlList.Web.Shared
 {
     public class AppState
     {
-        private readonly UrlList _urlList = new UrlList();
-        public UrlList CurrentList { get { return _urlList; } }
+        private  UrlList _urlList = new UrlList();
+        public UrlList CurrentList { get { return _urlList; }  }
 
-        public void SetTitleAndDescription(string title, string description)
+
+        public void Reset()
+        {
+              _urlList= new UrlList();  
+        }
+        public void SetMiscInfo(string userId,string title, string description)
         {
             _urlList.Description = description;
             _urlList.UrlId = title;
+            _urlList.UserId=userId;
         }
         public void AddUrl(CustomUrl url)
         {

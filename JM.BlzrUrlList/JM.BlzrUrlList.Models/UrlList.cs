@@ -9,7 +9,7 @@ namespace JM.BlzrUrlList.Models
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string Id { get; init; }
-        public string UserId { get; init; }
+        public string UserId { get; set; }
         public string UrlId { get; set; }
         public string Description { get; set; }
         public IList<CustomUrl>   Urls { get; set; }
