@@ -19,6 +19,7 @@
     "JM.BlzrUrlList.Web": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
+      "hotReloadProfile": "blazorwasm",
       "launchBrowser": true,
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "applicationUrl": "https://localhost:9091;http://localhost:9090",
