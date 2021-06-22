@@ -2,8 +2,10 @@
 using JM.BlzrUrlList.Core.Repository;
 using JM.BlzrUrlList.Exceptions;
 using JM.BlzrUrlList.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,7 +17,8 @@ namespace JM.BlzrUrlList.Api.Controllers
     public class UrlListController : ControllerBase
     {
         private readonly IUrlRepository _urlReposity;
-
+        static readonly string[] SCOPE_NEEDED_FOR_READ = new string[] { "api.read" };
+        static readonly string[] SCOPE_NEEDED_FOR_DELETE_WRITE = new string[] { "api.write" };
         public UrlListController(IUrlRepository urlReposity)
         {
             this._urlReposity = urlReposity;
@@ -44,6 +47,7 @@ namespace JM.BlzrUrlList.Api.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error Getting Data");
             }
         }
+        [Authorize]
         [HttpGet("users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -51,6 +55,8 @@ namespace JM.BlzrUrlList.Api.Controllers
         [Produces(typeof(UrlList))]
         public async Task<ActionResult<UrlList>> GetForUser(string userId)
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope(SCOPE_NEEDED_FOR_READ);
+            //TODO:Verify that it is the user's before returning?
             try
             {
                 var matchingItems = await _urlReposity.GetListForUser(userId);
@@ -87,6 +93,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         }
 
         // DELETE api/<UrlListController>/5
+        [Authorize]
         [HttpDelete("{urlId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -94,6 +101,8 @@ namespace JM.BlzrUrlList.Api.Controllers
         [Produces(typeof(UrlList))]
         public async Task<ActionResult> Delete(string urlId)
         {
+            HttpContext.VerifyUserHasAnyAcceptedScope(SCOPE_NEEDED_FOR_DELETE_WRITE);
+            //TODO:Verify that it is the user's before deleting
             try
             {
                 var deletedItm= await _urlReposity.Delete(urlId);

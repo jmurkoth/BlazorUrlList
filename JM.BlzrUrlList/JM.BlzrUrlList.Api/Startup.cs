@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace JM.BlzrUrlList.Api
 {
@@ -27,8 +28,14 @@ namespace JM.BlzrUrlList.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //JwtSecurityTokenHandler.DefaultMapInboundClaims = false; // Not needed
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
+                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd")); // grab from the app settings
+            services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters.NameClaimType = "name";
+           
+            });
             services.AddSingleton<IUrlRepository, InMemoryUrlRepository>();
             services.AddScoped<IOpenGraphRepository, OpenGraphRespository>();
             services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
@@ -39,7 +46,8 @@ namespace JM.BlzrUrlList.Api
                 options.AddPolicy(name: allowedOrigins,
                                   builder =>
                                   {
-                                      builder.AllowAnyOrigin()
+                                      builder.AllowAnyOrigin() // Use this if you want to allow all clients to access it
+                                      //builder.WithOrigins("https://localhost:9091") // Only Blazor app allowed
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();
                                   });
