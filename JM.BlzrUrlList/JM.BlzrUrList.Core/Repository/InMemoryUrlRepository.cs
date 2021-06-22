@@ -3,6 +3,7 @@ using JM.BlzrUrlList.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace JM.BlzrUrlList.Core.Repository
 {
@@ -36,7 +37,8 @@ namespace JM.BlzrUrlList.Core.Repository
 
         public Task<IList<UrlList>> GetListForUser(string userId)
         {
-            throw new NotImplementedException();
+            IList<UrlList> matches = _inMemoryList.Where(c => c.Value.UserId.Equals(userId, StringComparison.OrdinalIgnoreCase)).Select(d => d.Value).ToList();
+            return Task.FromResult(matches);
         }
 
         public Task<UrlList> Save(UrlList urlList)
