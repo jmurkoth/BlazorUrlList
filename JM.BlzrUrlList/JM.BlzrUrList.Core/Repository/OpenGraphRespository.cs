@@ -34,7 +34,7 @@ namespace JM.BlzrUrList.Core.Repository
                 // grab the description metatag
                 var descriptionFromTag = htmldoc.DocumentNode.SelectSingleNode("//meta[@name='description']")?.Attributes["content"]?.Value;
                 //grab the title metatag
-                var titleFromTag = htmldoc.DocumentNode.SelectSingleNode("//head/title").InnerText?.Trim();
+                var titleFromTag = htmldoc.DocumentNode.SelectSingleNode("//head/title")?.InnerText?.Trim();
 
                 var title = HtmlEntity.DeEntitize( String.IsNullOrEmpty(titleFromMetaData)? titleFromTag : titleFromMetaData);
                 var description = HtmlEntity.DeEntitize(String.IsNullOrEmpty(descriptionFromMetaData) ? descriptionFromTag: descriptionFromMetaData);
