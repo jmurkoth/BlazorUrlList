@@ -30,7 +30,7 @@ namespace JM.BlzrUrlList.Api
         {
             //JwtSecurityTokenHandler.DefaultMapInboundClaims = false; // Not needed
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd")); // grab from the app settings
+                    .AddMicrosoftIdentityWebApi(Configuration.GetSection("UrlListAzureAd")); // grab from the app settings
             services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
             {
                 options.TokenValidationParameters.NameClaimType = "name";
