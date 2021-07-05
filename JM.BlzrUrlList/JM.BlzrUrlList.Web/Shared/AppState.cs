@@ -11,7 +11,11 @@ namespace JM.BlzrUrlList.Web.Shared
         private  UrlList _urlList = new UrlList();
         public UrlList CurrentList { get { return _urlList; }  }
 
-
+    
+        public void SetList(UrlList urlList)
+        {
+            _urlList=urlList;
+        }
         public void Reset()
         {
               _urlList= new UrlList();  
