@@ -18,6 +18,10 @@ namespace JM.BlzrUrList.Core.Helper
             {
                 urlList.UrlId = GenerateId();
             }
+            else
+            {
+                urlList.UrlId = urlList.UrlId.ToLower();
+            }
         }
         private static string GenerateId()
         {
