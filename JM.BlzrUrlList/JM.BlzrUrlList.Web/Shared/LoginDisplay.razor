@@ -6,17 +6,21 @@
 
 <AuthorizeView>
     <Authorized>
-        <span class="nav-link">Hello, @context.User.Identity.Name!</span>
-        <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+        <li class="nav-item">
+            <span class="nav-link">Hello, @context.User.Identity.Name!</span>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+        </li>
     </Authorized>
     <NotAuthorized>
     <NavLink class="nav-link" href="authentication/login" Match="NavLinkMatch.All">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Login
+        <span class="oi oi-account-login" aria-hidden="true"></span> Login
     </NavLink>
     </NotAuthorized>
 </AuthorizeView>
 
-@code{
+@code {
     private async Task BeginLogout(MouseEventArgs args)
     {
         await SignOutManager.SetSignOutState();
