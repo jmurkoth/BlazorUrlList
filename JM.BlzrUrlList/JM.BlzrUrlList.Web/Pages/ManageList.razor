@@ -49,17 +49,8 @@
     private string listDescription;
     private bool isValid= true;
 
-
-
-        protected async override Task OnParametersSetAsync()
-        {
-           appState.Reset();
-        }
-
-    
     public async Task Linkadded(string newLink)
     {
-        Console.WriteLine($"Link added-{newLink}");
         // Add a state service
         var metaData = await urlService.GetUrlMetaData(newLink);
         appState.AddUrl(new Models.CustomUrl
@@ -69,6 +60,7 @@
             Title = metaData?.Title,
             Image = metaData?.Image
         });
+         Console.WriteLine($"Link added-{newLink}");
         StateHasChanged();
     }
     public void UrlDeleted()
