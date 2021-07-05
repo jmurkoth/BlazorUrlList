@@ -1,0 +1,61 @@
+@page "/mylists"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject AppState appState
+@inject UrlService urlService
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize(Roles = "urllist_editor")]
+
+<h1>My Lists go here</h1>
+    <div class="row row-cols-1 row-cols-md-5 g-5">
+  
+        @if(userUrlLists!=null)
+        {
+            
+            foreach (var urlList in userUrlLists)
+            {
+             
+                <div class="col">
+                    <UrlListDisplay DisplayItem=urlList OnDelete="DeleteUrl" ></UrlListDisplay>
+                </div>
+            }
+        
+        }
+
+    </div>
+
+@code
+{
+     [CascadingParameter]
+     Task<AuthenticationState> authenticationStateTask { get; set; }
+    
+     private List<UrlList> userUrlLists;
+    protected async override Task OnParametersSetAsync()
+    {
+       await RetrieveUrlsForUser();
+    }
+    private async Task DeleteUrl(UrlList url)
+    {
+       await Task.Run(()=>Console.WriteLine(url.UrlId));
+       var result=await urlService.DeleteUrlList(url);
+       //TODO: Display error message and confirmation
+       if(result!=null)
+       {
+           await RetrieveUrlsForUser();
+       }
+    }
+    private async Task RetrieveUrlsForUser()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState?.User;
+        var userId=string.Empty;
+        if (user.Identity.IsAuthenticated)
+        {
+            userId=user.GetUserNameClaim();
+            Console.WriteLine(userId);
+
+        }
+        userUrlLists = await urlService.GetListsForUser(userId);
+    }
+}

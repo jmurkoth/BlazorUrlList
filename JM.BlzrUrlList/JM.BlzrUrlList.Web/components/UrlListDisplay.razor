@@ -1,0 +1,28 @@
+@if(DisplayItem!=null)
+{
+<div class="col">
+    <div class="card text-white bg-dark mb-3" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">@DisplayItem.UrlId</h5>
+            <p class="card-text">@DisplayItem.Description</p>
+            <a href="mylist/@DisplayItem.UrlId" class="btn btn-primary">Edit</a>
+            <button class="btn btn-primary" @onclick="HandleDelete">Delete</button>
+        </div>
+    </div>
+</div>
+}
+
+
+
+@code{
+
+    [Parameter]
+    public UrlList DisplayItem {get;set;}
+    [Parameter]
+    public EventCallback<UrlList> OnDelete {get;set;}
+    
+    public async Task HandleDelete()
+    {
+        await OnDelete.InvokeAsync(DisplayItem);
+    }
+}
