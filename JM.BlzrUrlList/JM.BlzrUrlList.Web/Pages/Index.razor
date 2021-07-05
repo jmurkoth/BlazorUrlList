@@ -14,10 +14,11 @@
 {
     public async Task Linkadded(string newLink)
     {
-        Console.WriteLine($"Link added-{newLink}");
+       
         // Add a state service
         var metaData =await urlService.GetUrlMetaData(newLink);
         appState.AddUrl(new Models.CustomUrl { Url = newLink, Description = metaData?.Description, Title = metaData?.Title , Image= metaData?.Image });
+        Console.WriteLine($"Link added-{newLink}");
         NavManager.NavigateTo("/edit");
     }
 }
