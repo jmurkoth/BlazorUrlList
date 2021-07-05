@@ -43,7 +43,16 @@ namespace JM.BlzrUrlList.Core.Repository
 
         public Task<UrlList> Save(UrlList urlList)
         {
-            _inMemoryList.Add(urlList.UrlId, urlList);
+            if (!_inMemoryList.ContainsKey(urlList.UrlId))
+            {
+                _inMemoryList.Add(urlList.UrlId, urlList);
+            }
+            else
+            {
+                _inMemoryList.Remove(urlList.UrlId);
+                _inMemoryList.Add(urlList.UrlId, urlList);
+            }
+           
             return Task.FromResult(urlList);
         }
     }
