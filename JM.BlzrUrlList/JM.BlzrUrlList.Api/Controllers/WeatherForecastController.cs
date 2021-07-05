@@ -24,7 +24,7 @@ namespace JM.BlzrUrlList.Api.Controllers
 
         // The Web API will only accept tokens 1) for users, and 2) having the "access_as_user" scope for this API
         static readonly string[] scopeRequiredByApi = new string[] { "api_read" };
-
+          static readonly string[] appRoleRequiredByApi = new string[] { "urllist_editor" };
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
@@ -34,7 +34,7 @@ namespace JM.BlzrUrlList.Api.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
-
+            HttpContext.ValidateAppRole(appRoleRequiredByApi);
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
