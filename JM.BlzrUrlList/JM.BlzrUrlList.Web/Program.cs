@@ -1,14 +1,11 @@
-using JM.BlzrUrlList.Web.Shared;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions;
+using JM.BlzrUrlList.Web.Shared;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 namespace JM.BlzrUrlList.Web
 {
@@ -19,13 +16,26 @@ namespace JM.BlzrUrlList.Web
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddSingleton<AppState>();
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddHttpClient("UrlApi", client => client.BaseAddress = new Uri(builder.Configuration["UrlApi"]));
+            builder.Services.AddTransient<ApiAuthorizationMessageHandler>();
+            
+            var apiEndPoint = builder.Configuration.GetValue<string>("UrlApi");
+            var apiScopes = builder.Configuration.GetValue<string>("UrlApiTokenScope");
+            // Add the HTTP Client
+            builder.Services.AddHttpClient("webapi", client => client.BaseAddress = new Uri(apiEndPoint));
+            // if we dont keep them separate we get a token exception for unauthenticated calls
+            builder.Services.AddHttpClient("securewebapi", client => client.BaseAddress = new Uri(apiEndPoint))
+                .AddHttpMessageHandler<ApiAuthorizationMessageHandler>();
+            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("webapi"));
+             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("securewebapi"));
+   
             builder.Services.AddScoped<UrlService>();
-            builder.Services.AddMsalAuthentication(options =>
+            builder.Services.AddMsalAuthentication<RemoteAuthenticationState,UrlListUserAccount>(options =>
             {
-                builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-            });
+                builder.Configuration.Bind("BlzrUrlAzureAd", options.ProviderOptions.Authentication);
+                options.ProviderOptions.LoginMode="redirect";
+                options.UserOptions.RoleClaim = "appRole"; // without this authorize roles will not work even if claim is there
+                options.ProviderOptions.DefaultAccessTokenScopes.Add(apiScopes);
+            }).AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, UrlListUserAccount, UrlListAccountFactory>();
 
             await builder.Build().RunAsync();
         }
