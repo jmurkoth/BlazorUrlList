@@ -1,0 +1,103 @@
+@page "/mylist/{UrlId}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject AppState appState
+@inject UrlService urlService
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h1>Manage My list </h1>
+@if(appState.CurrentList!=null)
+{
+
+
+<div class="container" style="padding-top:100px">
+        <div class="row">
+        <div class="col-sm">
+           
+            <div class="form-floating mb-3">
+                <span  class="form-control" id="lnkTitle">@appState.CurrentList.UrlId</span>
+                <label for="lnkTitle">Link Title</label>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="lnkDescription" placeholder="" >
+                <label for="lnkDescription">Description</label>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="d-grid gap-2 mx-auto">
+                <button class="btn btn-lg btn-primary" disabled="@(!appState.Validate())" @onclick="Save">Save </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <UrlLink  OnValidLink="Linkadded" ></UrlLink>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <UrlEditor  Urls="appState.CurrentList.Urls" />
+        </div>
+    </div>
+</div>
+
+}
+
+@code{
+
+    [Parameter]
+     public string UrlId { get; set; }
+    
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+    protected async override Task OnParametersSetAsync()
+    {
+        if(!string.IsNullOrEmpty(UrlId))
+        {
+               var urlList=  await urlService.GetUrlList(UrlId);
+               appState.SetList(urlList);
+        }
+        
+    }
+    public async Task Linkadded(string newLink)
+    {
+       
+        // Add a state service
+        var metaData = await urlService.GetUrlMetaData(newLink);
+        appState.AddUrl(new Models.CustomUrl
+        {
+            Url = newLink,
+            Description = metaData?.Description,
+            Title = metaData?.Title,
+            Image = metaData?.Image
+        });
+        Console.WriteLine($"Link added-{newLink}");
+        StateHasChanged();
+    }
+      public async Task Save()
+    {
+       
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+        var userId=string.Empty;
+        if (user.Identity.IsAuthenticated)
+        {
+           userId=user.GetUserNameClaim();
+           Console.WriteLine(userId);
+           
+        }
+        var match = await urlService.UpdateUrlList(appState.CurrentList);
+        //TODO: SHOW ERROR MESSAGE ON FAILURE
+        if (match != null)
+        {
+            appState.Reset();
+            Console.WriteLine($"Url List saved");
+            NavManager.NavigateTo($"/mylists");
+        }
+
+
+    }
+}
